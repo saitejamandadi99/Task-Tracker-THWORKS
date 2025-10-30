@@ -19,7 +19,7 @@ const getAllTasks = async (req, res)=>{
     try {
         const tasks = await Task.find({}).sort({createdAt: -1})     
         if(tasks.length === 0){
-            return res.status(200).json({message:'No tasks has been created yet.'})
+            return res.status(200).json({message:'No tasks has been created yet.', tasks:[]})
         }
         return res.status(200).json({message:'Tasks fetched successfully', tasks:tasks})
     } catch (error) {
