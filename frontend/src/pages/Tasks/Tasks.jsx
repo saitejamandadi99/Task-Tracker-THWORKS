@@ -5,6 +5,7 @@ const Tasks = () =>{
     const [success,setSuccess] = useState('')
     const [error, setError] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    const [insights,setInsights] = useState('')
 
     const fetchTasks = async ()=>{
         try {
@@ -14,11 +15,18 @@ const Tasks = () =>{
                 method:'GET',
                 headers : {'Content-Type': 'application/json'},
             })
+            const responseInsights = await fetch(`${API_URL}/api/tasks/insights`,{
+                method:'GET',
+                headers : {'Content-Type': 'application/json'},
+            })
+
             const data = await response.json()
-            if(response.ok){
+            const dataInsights = await responseInsights.json()
+            if(response.ok && responseInsights.ok){
                 setSuccess(data.message)
                 setTasksList(data.tasks)
                 setError('')
+                setInsights(dataInsights.insights)
             }
             else{
                 setError(data.message || "Failed to fetch tasks");
@@ -31,6 +39,7 @@ const Tasks = () =>{
             setIsLoading(false)
         }
     }
+
     useEffect(()=>{
         fetchTasks()
     },[])
@@ -41,6 +50,7 @@ const Tasks = () =>{
             {isLoading && <p>Loading...</p>}
             {error && <p style={{color:'red'}}>{error}</p>}
             {success && <p style={{color:'green'}}>{success}</p>}
+            {insights && <p>{insights}</p>}
 
             <ul>
                 {
