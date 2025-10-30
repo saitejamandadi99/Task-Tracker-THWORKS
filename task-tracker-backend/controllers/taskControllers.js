@@ -8,7 +8,7 @@ const createTask = async (req , res) =>{
             return res.status(400).json({message:'require fields title, priority, dueDate'})
         }
         const newTask = await Task.create({title, description, priority, status, dueDate})
-        return res.status(201).json({message:'Task created', taskId: newTask._id})
+        return res.status(201).json({message:'Task created', taskId: newTask})
         
     } catch (error) {
         return res.status(500).json({message:error.message})
