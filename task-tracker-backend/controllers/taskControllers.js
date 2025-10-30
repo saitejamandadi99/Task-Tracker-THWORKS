@@ -8,7 +8,7 @@ const createTask = async (req , res) =>{
             return res.status(400).json({message:'require fields title, priority, dueDate'})
         }
         const newTask = await Task.create({title, description, priority, status, dueDate})
-        return res.status(201).json({message:'Task created', taskId: newTask})
+        return res.status(201).json({message:'Task created', task: newTask})
         
     } catch (error) {
         return res.status(500).json({message:error.message})
@@ -57,6 +57,19 @@ const deleteTask = async (req, res)=>{
 }
 
 //get insights
+const getInsights = async (req, res)=>{
+    try {
+        const openStatusTasks = await Task.countDocuments({status:'Open'})
+        const upcomingTasks = await Task.countDocuments({
+            status:{$ne:'Done'}, //not equals to Done
+            dueDate:{$lte: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)}
+        })
+        let insights = `There are ${openStatusTasks} open tasks.`
+        if(upcomingTasks > 0) insights += `${upcomingTasks} task(s) are due soon`
+        res.status(200).json({message:'Insights fetched', insights: insights})
+    } catch (error) {
+        return res.status(500).json({message:error.message})
+    }
+}
 
-
-module.exports = {createTask, getAllTasks, updateTask, deleteTask}
+module.exports = {createTask, getAllTasks, updateTask, deleteTask, getInsights}
