@@ -1,5 +1,6 @@
 
 import CreateTask from './pages/CreateTask/CreateTask'
+import Tasks from './pages/Tasks/Tasks'
 import './App.css';
 
 function App() {
@@ -7,6 +8,7 @@ function App() {
     <>
       <h1>Welcome to the frontend</h1>
       <CreateTask />
+      <Tasks />
     </>
   );
 }
