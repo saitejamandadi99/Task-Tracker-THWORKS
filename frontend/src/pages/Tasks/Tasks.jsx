@@ -58,6 +58,8 @@ const Tasks = () =>{
                         tasksList.map(eachTask=>(
                             <li key={eachTask._id}>
                                 <strong>{eachTask.title}</strong> - {eachTask.status}
+                                <button type="button">Update</button>
+                                <button type="button">Delete</button>
                             </li>
                         ))
 
