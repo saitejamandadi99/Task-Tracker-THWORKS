@@ -8,12 +8,14 @@ app.use(express.json())
 app.use(cors())
 
 const MONGO_URL = process.env.MONGO_URL
+
 mongoose.connect(MONGO_URL)
 .then(()=>console.log('MongoDB connected to the backend'))
-.catch((error)=>console.error(error.message))
+.catch((error)=>console.error('error',error.message))
+
 app.get('/', (req,res)=>{
     res.send('Application running in the backend')
-    console.log('error', 'application is running in the backend.')
+    console.log('application is running in the backend.')
 })
 const PORT = process.env.PORT || 5000
 app.listen(PORT, ()=>{
