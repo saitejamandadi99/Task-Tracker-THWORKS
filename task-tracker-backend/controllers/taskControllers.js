@@ -7,7 +7,7 @@ const createTask = async (req , res) =>{
         if(!title || !priority || !dueDate){
             return res.status(400).json({message:'require fields title, priority, dueDate'})
         }
-        const newTask = await Task.create(title, description, priority, status, dueDate)
+        const newTask = await Task.create({title, description, priority, status, dueDate})
         return res.status(201).json({message:'Task created', taskId: newTask._id})
         
     } catch (error) {
@@ -18,10 +18,10 @@ const createTask = async (req , res) =>{
 const getAllTasks = async (req, res)=>{
     try {
         const tasks = await Task.find({}).sort({createdAt: -1})     
-        if(!tasks){
-            return res.status(201).json({message:'No tasks has been created yet.'})
+        if(tasks.length === 0){
+            return res.status(200).json({message:'No tasks has been created yet.'})
         }
-        return res.status(201).json({message:'Tasks fetched successfully', tasks:tasks})
+        return res.status(200).json({message:'Tasks fetched successfully', tasks:tasks})
     } catch (error) {
         return res.status(500).json({message: error.message})
     }
@@ -30,11 +30,11 @@ const getAllTasks = async (req, res)=>{
 const updateTask = async (req, res)=>{
     try {
         const taskId = req.params.id 
-        const task =await Task.findOneAndUpdate({_id: taskId}, req.body, {new:true})
+        const task =await Task.findOneAndUpdate({_id: taskId}, req.body, {new:true, runValidators:true})
         if (!task){
             return res.status(404).json({message:'Task not found'})
         }
-        return res.status(201).json({message:'task updated successfully', task:task})
+        return res.status(200).json({message:'task updated successfully', task:task})
         
     } catch (error) {
         return res.status(500).json({message: error.message})
@@ -49,7 +49,7 @@ const deleteTask = async (req, res)=>{
         if(!task){
             return res.status(404).json({message:'Task not found'})
         }
-        res.status(201).json({message:'Task deleted successfully'})
+        res.status(200).json({message:'Task deleted successfully'})
         
     } catch (error) {
         return res.status(500).json({message:error.message})
