@@ -12,18 +12,18 @@ const taskSchema = new Schema({
     },
     priority:{
         type:String,
-        enum:['high','mid','low'],
+        enum:['High','Medium','Low'],
         required:true
+    },
+    status: {
+        type:String,
+        enum: ['Open', 'In Progress', 'Done']
+
     },
     dueDate: {
         type:Date,
         required:true
     },
-    userId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'User',
-        required:true
-    }
 },
         {timestamps: true}
 )
