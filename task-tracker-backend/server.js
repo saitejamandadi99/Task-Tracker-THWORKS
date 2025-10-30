@@ -17,6 +17,9 @@ app.get('/', (req,res)=>{
     res.send('Application running in the backend')
     console.log('application is running in the backend.')
 })
+app.use('/api',require('./routes/userAuthRoutes'))
+app.use('/api/tasks', require('./routes/taskRoutes'))
+
 const PORT = process.env.PORT || 5000
 app.listen(PORT, ()=>{
     console.log(`application is running in the http://localhost:${PORT}`)
