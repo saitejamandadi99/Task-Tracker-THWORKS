@@ -15,7 +15,7 @@ const UpdateTask = () =>{
         try{
             const response = await fetch(`${API_URL}/api/tasks/getAll`)
             const data = response.json()
-            const found = data.tasks.find((eachTask)=>eachTask.id === id)
+            const found = data.tasks.find((eachTask)=>eachTask._id === id)
             if (found) setTaskData(found)
         }
         catch(error){
@@ -26,6 +26,12 @@ const UpdateTask = () =>{
     useEffect(()=>{
         fetchTasks()
     },[id, API_URL])
+
+    const handleChange = (e) => {
+    const { name, value } = e.target;
+    setTaskData((prev) => ({ ...prev, [name]: value }));
+  };
+
 
     const handleSubmit = async (e) => {
     e.preventDefault();
