@@ -1,7 +1,7 @@
 import {useState,useEffect} from 'react'
 import {useParams, useNavigate} from 'react-router-dom'
 
-const updateTask = () =>{
+const UpdateTask = () =>{
     const {id} = useParams();
     const navigate = useNavigate(); 
 
@@ -89,3 +89,5 @@ const updateTask = () =>{
     </div>
   );
 }
+
+export default UpdateTask
