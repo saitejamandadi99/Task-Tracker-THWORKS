@@ -1,4 +1,5 @@
 import { useState,useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Tasks = () =>{
     const [tasksList , setTasksList] = useState([])
@@ -7,7 +8,7 @@ const Tasks = () =>{
     const [isLoading, setIsLoading] = useState(false)
     const [insights,setInsights] = useState('')
     const [isDeleting, setIsDeleting] = useState(false)
-
+    const navigate = useNavigate()
     const fetchTasks = async ()=>{
         try {
            setIsLoading(true)
@@ -91,7 +92,7 @@ const Tasks = () =>{
                         tasksList.map(eachTask=>(
                             <li key={eachTask._id}>
                                 <strong>{eachTask.title}</strong> - {eachTask.status}
-                                <button type="button">Update</button>
+                                <button type="button" onClick={() => navigate(`/update/${eachTask._id}`)}>Update</button>
                                 <button type="button" disabled={isDeleting} onClick={()=>handleDelete(eachTask._id)}>Delete</button>
                             </li>
                         ))
