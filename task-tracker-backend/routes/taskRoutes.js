@@ -8,4 +8,4 @@ router.patch('/update/:id', updateTask)
 router.delete('/delete/:id', deleteTask)
 router.get('/insights', getInsights)
 
-module.exports = router  
+module.exports = router     

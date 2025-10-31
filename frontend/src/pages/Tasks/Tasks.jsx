@@ -6,6 +6,7 @@ const Tasks = () =>{
     const [error, setError] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [insights,setInsights] = useState('')
+    const [isDeleting, setIsDeleting] = useState(false)
 
     const fetchTasks = async ()=>{
         try {
@@ -40,6 +41,38 @@ const Tasks = () =>{
         }
     }
 
+    const handleDelete = async (taskId) =>{
+        try{
+            setIsDeleting(true)
+            const API_URL = process.env.REACT_APP_API_URL
+            const confirmDelete = window.confirm('Do you want to delete this task')
+            if (!confirmDelete) return
+
+            const response = await fetch(`${API_URL}/api/tasks/delete/${taskId  }`,{
+                method: 'DELETE',
+                headers: {"Content-Type":"application/json"}
+            })
+            const data = await response.json()
+            if(response.ok){
+                setSuccess(data.message || 'Task deleted successfully')
+                setError('')
+                setTasksList(tasksList.filter((eachTask)=>taskId !==eachTask._id))
+            }
+            else{
+                setError(data.message || 'Failed to delete the task')
+                setSuccess('')
+
+            }
+        }
+        catch (error) {
+            setError(error.message)
+        }
+        finally{
+            setIsDeleting(false)
+        }
+
+    }
+
     useEffect(()=>{
         fetchTasks()
     },[])
@@ -59,7 +92,7 @@ const Tasks = () =>{
                             <li key={eachTask._id}>
                                 <strong>{eachTask.title}</strong> - {eachTask.status}
                                 <button type="button">Update</button>
-                                <button type="button">Delete</button>
+                                <button type="button" onClick={()=>handleDelete(eachTask._id)}>Delete</button>
                             </li>
                         ))
 
