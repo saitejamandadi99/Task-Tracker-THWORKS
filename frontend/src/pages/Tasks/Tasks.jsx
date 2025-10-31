@@ -92,7 +92,7 @@ const Tasks = () =>{
                             <li key={eachTask._id}>
                                 <strong>{eachTask.title}</strong> - {eachTask.status}
                                 <button type="button">Update</button>
-                                <button type="button" onClick={()=>handleDelete(eachTask._id)}>Delete</button>
+                                <button type="button" disabled={isDeleting} onClick={()=>handleDelete(eachTask._id)}>Delete</button>
                             </li>
                         ))
 
