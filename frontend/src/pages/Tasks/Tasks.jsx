@@ -3,11 +3,14 @@ import { useNavigate } from "react-router-dom";
 
 const Tasks = () =>{
     const [tasksList , setTasksList] = useState([])
+    const [filteredTasks,setFilteredTasks] = useState([])
     const [success,setSuccess] = useState('')
     const [error, setError] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [insights,setInsights] = useState('')
     const [isDeleting, setIsDeleting] = useState(false)
+    const [filterStatus, setFilterStatus] = useState("All");
+    const [sortOrder, setSortOrder] = useState("asc");
     const navigate = useNavigate()
     const fetchTasks = async ()=>{
         try {
@@ -27,6 +30,7 @@ const Tasks = () =>{
             if(response.ok && responseInsights.ok){
                 setSuccess(data.message)
                 setTasksList(data.tasks)
+                setFilteredTasks(data.tasks);
                 setError('')
                 setInsights(dataInsights.insights)
             }
@@ -74,9 +78,55 @@ const Tasks = () =>{
 
     }
 
+    useEffect(() => {
+        let updatedTasks = [...tasksList];
+
+        if (filterStatus !== "All") {
+          updatedTasks = updatedTasks.filter(
+            (task) => task.status === filterStatus
+            );
+        }
+        updatedTasks.sort((a, b) => {
+            const dateA = new Date(a.dueDate);
+            const dateB = new Date(b.dueDate);
+            return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
+            });
+        setFilteredTasks(updatedTasks);
+    }, [filterStatus, sortOrder, tasksList]);
+
+
     useEffect(()=>{
         fetchTasks()
     },[])
+
+    const FilterByStatus = () => (
+        <div style={{ marginBottom: "10px" }}>
+        <label>Status: </label>
+        <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+        >
+            <option value="All">All</option>
+            <option value="Open">Open</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Done">Done</option>
+        </select>
+        </div>
+    );
+
+    
+    const SortByDueDate = () => (
+        <div style={{ marginBottom: "10px" }}>
+        <label>Sort by Due Date: </label>
+        <select
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+        >
+            <option value="asc">Earliest First</option>
+            <option value="desc">Latest First</option>
+        </select>
+        </div>
+    );
 
     return(
         <div>
@@ -86,10 +136,13 @@ const Tasks = () =>{
             {success && <p style={{color:'green'}}>{success}</p>}
             {insights && <p>{insights}</p>}
 
+            <FilterByStatus />
+            <SortByDueDate />
+
             <ul>
                 {
-                    tasksList.length > 0 ? (
-                        tasksList.map(eachTask=>(
+                    filteredTasks.length > 0 ? (
+                        filteredTasks.map(eachTask=>(
                             <li key={eachTask._id}>
                                 <strong>{eachTask.title}</strong> - {eachTask.status}
                                 <button type="button" onClick={() => navigate(`/update/${eachTask._id}`)}>Update</button>
